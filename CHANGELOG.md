@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+- Pass FFmpeg profile `Copy` video/audio format through to the Next engine as stream copy instead of forcing H264/AAC
 
 ## [26.9.0] - 2026-09-06
 ### Fixed

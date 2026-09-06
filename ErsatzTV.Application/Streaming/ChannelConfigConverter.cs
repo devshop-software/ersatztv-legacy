@@ -48,9 +48,11 @@ public class ChannelConfigConverter(IConfigElementRepository configElementReposi
 
         var audioNormalization = new Audio
         {
+            // a null format tells next to stream copy audio
             Format = ffmpegProfile.AudioFormat switch
             {
-                FFmpegProfileAudioFormat.Ac3 => AudioFormat.Ac3,
+                FFmpegProfileAudioFormat.Copy => null,
+                FFmpegProfileAudioFormat.Ac3 => (AudioFormat?)AudioFormat.Ac3,
                 _ => AudioFormat.Aac
             },
             BitrateKbps = ffmpegProfile.AudioBitrate,
@@ -80,9 +82,11 @@ public class ChannelConfigConverter(IConfigElementRepository configElementReposi
 
         var videoNormalization = new Video
         {
+            // a null format tells next to stream copy video
             Format = ffmpegProfile.VideoFormat switch
             {
-                FFmpegProfileVideoFormat.Hevc => VideoFormat.Hevc,
+                FFmpegProfileVideoFormat.Copy => null,
+                FFmpegProfileVideoFormat.Hevc => (VideoFormat?)VideoFormat.Hevc,
                 _ => VideoFormat.H264
             },
             BitDepth = ffmpegProfile.BitDepth switch
