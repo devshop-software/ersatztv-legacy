@@ -400,6 +400,15 @@ public class PlayoutItemConverter(
         // TODO: external image subtitles
         allSubtitles.RemoveAll(s => s.IsImage && s.SubtitleKind is not SubtitleKind.Embedded);
 
+        // next's convert mode can only serve text subtitles (as WebVTT); an image subtitle would be
+        // handed to a copy-only pipeline whose subtitle muxer cannot write it (ffmpeg exit 234) and
+        // the whole item would be replaced with black/silence, so never select one here
+        if (channel.StreamingEngine is StreamingEngine.Next &&
+            channel.NextEngineTextSubtitleMode is NextEngineTextSubtitleMode.Convert)
+        {
+            allSubtitles.RemoveAll(s => s.IsImage);
+        }
+
         Option<MediaStream> maybeAudioStream = Option<MediaStream>.None;
         Option<Subtitle> maybeSubtitle = Option<Subtitle>.None;
 

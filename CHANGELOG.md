@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Pass FFmpeg profile `Copy` video/audio format through to the Next engine as stream copy instead of forcing H264/AAC
 - Treat a channel's preferred subtitle language as an ordered list (`srp,eng`): the first language with a matching subtitle wins, instead of no subtitle at all when the primary language is missing
   - Channel editor gains a **Fallback Subtitle Language** field; the value is stored in the existing column, no migration
+  - Next engine channels in `Convert` subtitle mode never select an image (PGS/VOBSUB) subtitle: it cannot be converted, and handing it to a copy-only pipeline failed the whole item (ffmpeg exit 234, black/silence)
 - Next engine multi-variant playlist: label the subtitle rendition `Subtitles` (the language varies per item now; `LANGUAGE="en"` is kept because TiviMate hides text tracks that carry no language), and declare `CLOSED-CAPTIONS=NONE` on the variant so spec-following HLS clients do not assume in-band CEA-608 captions
 
 ## [26.9.0] - 2026-09-06
