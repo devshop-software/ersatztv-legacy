@@ -198,8 +198,8 @@ public class StartFFmpegNextSessionHandler(
 
         return $@"#EXTM3U
 #EXT-X-VERSION:6
-#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=""subs"",NAME=""English"",DEFAULT=YES,AUTOSELECT=YES,FORCED=NO,LANGUAGE=""en"",URI=""{subtitlePlaylist}""
-#EXT-X-STREAM-INF:BANDWIDTH={bitrate}{resolution}
+#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID=""subs"",NAME=""Subtitles"",DEFAULT=YES,AUTOSELECT=YES,FORCED=NO,URI=""{subtitlePlaylist}""
+#EXT-X-STREAM-INF:BANDWIDTH={bitrate}{resolution},CLOSED-CAPTIONS=NONE
 {variantPlaylist}";
     }
 }

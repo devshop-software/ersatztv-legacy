@@ -48,7 +48,38 @@ public class ChannelEditViewModel
     public StreamingMode StreamingMode { get; set; }
     public int? WatermarkId { get; set; }
     public int? FallbackFillerId { get; set; }
-    public string PreferredSubtitleLanguageCode { get; set; }
+    public string PrimarySubtitleLanguageCode { get; set; }
+    public string FallbackSubtitleLanguageCode { get; set; }
+
+    // stored in the channel as `primary` or `primary,fallback` - an ordered list of languages
+    public string PreferredSubtitleLanguageCode
+    {
+        get
+        {
+            bool hasPrimary = !string.IsNullOrWhiteSpace(PrimarySubtitleLanguageCode);
+            bool hasFallback = !string.IsNullOrWhiteSpace(FallbackSubtitleLanguageCode);
+
+            if (hasPrimary && hasFallback)
+            {
+                return $"{PrimarySubtitleLanguageCode},{FallbackSubtitleLanguageCode}";
+            }
+
+            if (hasPrimary)
+            {
+                return PrimarySubtitleLanguageCode;
+            }
+
+            return hasFallback ? FallbackSubtitleLanguageCode : null;
+        }
+        set
+        {
+            string[] codes = (value ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            PrimarySubtitleLanguageCode = codes.Length > 0 ? codes[0] : null;
+            FallbackSubtitleLanguageCode = codes.Length > 1 ? codes[1] : null;
+        }
+    }
+
     public ChannelSubtitleMode SubtitleMode { get; set; }
     public ChannelMusicVideoCreditsMode MusicVideoCreditsMode { get; set; }
 

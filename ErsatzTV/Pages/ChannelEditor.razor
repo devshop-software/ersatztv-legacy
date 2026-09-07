@@ -231,8 +231,22 @@ else
         <div class="d-flex">
             <MudText>Preferred Subtitle Language</MudText>
         </div>
-        <MudSelect @bind-Value="_model.PreferredSubtitleLanguageCode"
-                   For="@(() => _model.PreferredSubtitleLanguageCode)"
+        <MudSelect @bind-Value="_model.PrimarySubtitleLanguageCode"
+                   For="@(() => _model.PrimarySubtitleLanguageCode)"
+                   Clearable="true">
+            <MudSelectItem Value="@((string)null)">(none)</MudSelectItem>
+            @foreach (LanguageCodeViewModel culture in _availableCultures)
+            {
+                <MudSelectItem Value="@culture.ThreeLetterISOLanguageName">@culture.EnglishName</MudSelectItem>
+            }
+        </MudSelect>
+    </MudStack>
+    <MudStack Row="true" Breakpoint="Breakpoint.SmAndDown" Class="form-field-stack gap-md-8 mb-5">
+        <div class="d-flex">
+            <MudText>Fallback Subtitle Language</MudText>
+        </div>
+        <MudSelect @bind-Value="_model.FallbackSubtitleLanguageCode"
+                   For="@(() => _model.FallbackSubtitleLanguageCode)"
                    Clearable="true">
             <MudSelectItem Value="@((string)null)">(none)</MudSelectItem>
             @foreach (LanguageCodeViewModel culture in _availableCultures)

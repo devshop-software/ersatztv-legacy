@@ -242,19 +242,46 @@ public class FFmpegStreamSelector : IFFmpegStreamSelector
         }
         else
         {
-            // filter to preferred language
-            allCodes = GetTwoAndThreeLetterLanguageCodes(_languageCodeService.GetAllLanguageCodes([language]));
-            if (allCodes.Count > 1)
+            // filter to preferred language; a comma-separated value is an ordered list of
+            // languages, and the first language with any matching subtitle wins
+            List<string> preferredLanguages = language
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .ToList();
+
+            var matchingSubtitles = new List<Subtitle>();
+            foreach (string preferredLanguage in preferredLanguages)
             {
-                if (shouldLogMessages)
+                List<string> codes =
+                    GetTwoAndThreeLetterLanguageCodes(_languageCodeService.GetAllLanguageCodes([preferredLanguage]));
+                if (codes.Count > 1)
                 {
-                    _logger.LogDebug("Preferred subtitle language has multiple codes {Codes}", allCodes);
+                    if (shouldLogMessages)
+                    {
+                        _logger.LogDebug("Preferred subtitle language has multiple codes {Codes}", codes);
+                    }
+                }
+
+                allCodes.AddRange(codes);
+
+                matchingSubtitles = candidateSubtitles
+                    .Filter(s => codes.Any(c => string.Equals(s.Language, c, StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
+
+                if (matchingSubtitles.Count > 0)
+                {
+                    if (preferredLanguages.Count > 1 && shouldLogMessages)
+                    {
+                        _logger.LogDebug(
+                            "Using preferred subtitle language {Language} from {Languages}",
+                            preferredLanguage,
+                            preferredLanguages);
+                    }
+
+                    break;
                 }
             }
 
-            candidateSubtitles = candidateSubtitles
-                .Filter(s => allCodes.Any(c => string.Equals(s.Language, c, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
+            candidateSubtitles = matchingSubtitles;
         }
 
         if (candidateSubtitles.Count > 0)
